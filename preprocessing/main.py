@@ -29,6 +29,17 @@ import huggingface_hub
 import torch
 
 
+def readTopProf():
+    with open("lists_of_profs.json", "r") as file:
+        all_profs = json.load(file)
+
+    all_profs = [item.lower() for item in all_profs]
+    prof_counts = Counter(all_profs)
+    top_10_profs = prof_counts.most_common(10)
+    return top_10_profs
+
+    
+
 if __name__ == "__main__":
     # Dataset names
     persona_dataset_name="proj-persona/PersonaHub"
@@ -40,9 +51,7 @@ if __name__ == "__main__":
     dataset_loader_election_qs = DatasetLoader(election_questions_dataset_name)
     dataset_loader_global_qs = DatasetLoader(global_questions_dataset_name)
 
- 
 
-    # Load the LLaMA 3.1 model and tokenizer 
     model_id = "meta-llama/Llama-3.2-3B-Instruct"
     access_token = "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" 
 
@@ -60,15 +69,38 @@ if __name__ == "__main__":
                 torch_dtype=torch.float16,
                 device=device
     )
-    agent_prof = dataset_loader_persona.extract_professions(tokenizer,model,pipe,device)
-    print(agent_prof)
 
-    all_profs = [string for sublist in agent_prof for string in sublist]
+    # grab all professions in the personahub dataset
+    # agent_prof = dataset_loader_persona.extract_professions(tokenizer,model,pipe,device)
+    # print(agent_prof)
+    # all_profs = [string for sublist in agent_prof for string in sublist]
+    # with open("lists_of_profs.json", "w") as file:
+    #     json.dump(all_profs, file)
 
-    with open("lists_of_profs.json", "w") as file:
-        json.dump(all_profs, file)
+  
 
-    prof_counts = Counter(all_profs)
-    top_10_profs = prof_counts.most_common(10)
+    # top10ProfsList = readTopProf()
+    # top10Profs = [item[0] for item in top10ProfsList]
 
-    print(top_10_profs)
+    print("Generating the Agent Descriptions")
+    top10Profs = ['historian', 'data analyst','genealogist','sports journalist','researcher','journalist','data scientist', 'sports analyst', 'writer','travel blogger']
+    ages = ["young","old"]
+    genders = ["female","male"]
+
+    listOfPrompts = []
+    for g in genders:
+        for a in ages:
+            for p in top10Profs:
+                prompt = f"You are a {a} {g} who is {p}"
+                print(prompt)
+                listOfPrompts.append(prompt)
+
+    print(len(listOfPrompts))
+
+
+    #create agent 
+    agent=
+    # agent.generatePromptGlobalHealth()
+
+
+

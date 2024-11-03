@@ -66,9 +66,9 @@ class DatasetLoader:
 
             raw_output = outputs[0]["generated_text"] if isinstance(outputs[0], dict) else outputs[0]
             professionStr = raw_output[-1]["content"]
-            print(professionStr)
+            # print(professionStr)
             professionStrList = [s.strip() for s in professionStr.split(",")]
-            print(professionStrList)
+            # print(professionStrList)
             professionStrListComplete.append(professionStrList)
 
             torch.cuda.empty_cache()
