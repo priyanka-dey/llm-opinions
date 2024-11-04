@@ -52,7 +52,7 @@ class Agent:
             messages, 
             max_new_tokens=max_new_tokens,
             do_sample=False,
-            temperature=0.5,  # length consistency
+            temperature=0.5,  # consistency, will change to >0.5 (e.g.0.7 or 0.8) to prevent repeated responses
             top_p=1.0,
         )
 
