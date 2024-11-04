@@ -41,6 +41,47 @@ def readTopProf():
     top_10_profs = prof_counts.most_common(10)
     return top_10_profs
 
+def generateDebateResponse(persona,conv_history):
+    ### TODO: generate persona's answer to debate
+    max_input_length = 1024
+    max_new_tokens = 512 
+
+
+    input_ids = self.tokenizer(question, return_tensors='pt', truncation=True, max_length=max_input_length)['input_ids']
+    inputs_ids = input_ids.to(self.device)
+    truncated_text = self.tokenizer.decode(input_ids.squeeze(), skip_special_tokens=True)
+
+
+
+
+
+def debate():
+    personas = \
+    ["You are an elder male teacher with a cautious and thoughtful perspective on technology. Please answer the following questions to the best of your ability.",\
+    "You are an elder female teacher who believes in the power of education to shape responsible technology use. Please answer the following questions with your viewpoint.",\
+    "You are a young female student who is excited about the potential of technology. Please share your thoughts with enthusiasm.",\
+    "You are a young male student, skeptical but curious about technology's role in society. Answer with your perspective."]
+
+    with open('/nas/eclairnas01/users/gpinto/csci_project/llm-opinions/preprocessing/responses.txt') as ds:
+        debateQuestions = ds.readlines()
+
+    conversation_history = [] #serves as memory for the conversations that occur between agents 
+    rounds = 3
+    for questionIdx in range(len(debateQuestions)):
+        curQ = debateQuestions[questionIdx]
+        print(f"\n--- Starting discussion on question: {question} ---\n")
+        currentUserQ= {
+            "role": "user", "content": curQ
+        }
+        conversation_history.append(currentUserQ)  #add the current questions, includes role/user and content/question
+
+        for r in range(rounds):
+            for persona in personas: 
+                persona_answer = generateDebateResponse(persona,conversation_history)
+
+
+
+
     
 
 if __name__ == "__main__":
@@ -155,12 +196,14 @@ if __name__ == "__main__":
                 cur_response = responseOptionsList[idx]
                 answer = agent_person.generate_response(cur_question,cur_response)
                 print("AGENT RESPONSE: ",answer)
-
                 writer.writerow([cur_question, cur_response, answer])
-        
-        # agent.generatePromptGlobalHealth()
+
         print("Generation and QA complete")
+
+
         print("Start of the Global Health Debate")
+        debate()
+
 
 
 
